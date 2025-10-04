@@ -1,4 +1,4 @@
-﻿# --- Python ---
+﻿# Python
 __pycache__/
 *.py[cod]
 *$py.class
@@ -19,20 +19,19 @@ dist/
 .eggs/
 .wheels/
 
-# --- Node / Frontend ---
+# Node / Frontend
 node_modules/
 .pnpm-store/
 .yarn/
 .yarn-cache/
 .npm/
-.npmrc
 
-# Vite / React build outputs
+# Frontend build outputs
 frontend/dist/
 dist/
+public/build/
 *.bundle.js
 *.bundle.js.map
-*.min.js
 
 # Logs & coverage
 *.log
@@ -43,7 +42,7 @@ coverage.xml
 pytest-cache/
 .pytest_cache/
 
-# Databases & state
+# Databases & runtime state
 *.sqlite
 *.sqlite3
 *.db
@@ -61,11 +60,11 @@ instance/*.sqlite*
 .DS_Store
 Thumbs.db
 
-# AWS / Secrets
+# AWS / secrets
 .aws/
 *.pem
 *.ppk
-.secret/
+secret*/
 secrets/
 .env.aws
 .env.local
@@ -85,14 +84,7 @@ htmlcov/
 nosetests.xml
 junit*.xml
 
-# Docker / Compose overrides
+# Docker / runtime
 *.pid
 *.pid.lock
 docker-data/
-
-# Misc backup files
-*~
-*.swp
-*.swo
-.BACKUP
-.RELEASE_BACKUP

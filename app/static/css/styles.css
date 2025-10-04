@@ -1,0 +1,119 @@
+﻿:root {
+  --brand-primary: #4c5fd7;
+  --brand-primary-dark: #3340a1;
+  --brand-accent: #12d8fa;
+  --brand-surface: rgba(255, 255, 255, 0.88);
+  --brand-muted: #f5f6ff;
+}
+
+body {
+  min-height: 100vh;
+  background: linear-gradient(135deg, rgba(76, 95, 215, 0.85), rgba(18, 216, 250, 0.8));
+  color: #1f2937;
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+}
+
+.navbar {
+  border-radius: 1.25rem;
+  margin: 1.5rem auto;
+  background: rgba(13, 27, 84, 0.85);
+  backdrop-filter: blur(18px);
+}
+
+.navbar-brand {
+  font-weight: 700;
+  letter-spacing: 0.03em;
+}
+
+.nav-link {
+  color: rgba(255, 255, 255, 0.92) !important;
+}
+
+.nav-link.active,
+.nav-link:hover {
+  color: var(--brand-accent) !important;
+}
+
+main.container {
+  max-width: 1140px;
+  margin-bottom: 4rem;
+}
+
+.glass-card,
+.card-modern {
+  background: var(--brand-surface);
+  border-radius: 1.5rem;
+  padding: 2.5rem 2rem;
+  box-shadow: 0 30px 60px rgba(15, 23, 42, 0.15);
+  backdrop-filter: blur(16px);
+}
+
+.card-modern {
+  border: none;
+}
+
+.hero-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.hero-stats .stat-card {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 1.25rem;
+  padding: 1.5rem;
+  box-shadow: 0 15px 45px rgba(15, 23, 42, 0.12);
+}
+
+.hero-stats .stat-title {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #6b7280;
+}
+
+.hero-stats .stat-value {
+  font-size: 1.85rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.badge-role {
+  background: rgba(76, 95, 215, 0.12);
+  color: var(--brand-primary-dark);
+  border-radius: 999px;
+  padding: 0.35rem 0.85rem;
+  font-weight: 600;
+}
+
+.table {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 1rem;
+  overflow: hidden;
+  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.1);
+}
+
+.btn-primary,
+.btn-success,
+.btn-outline-secondary,
+.btn-outline-danger {
+  border-radius: 999px;
+  padding-inline: 1.4rem;
+}
+
+.alert {
+  border-radius: 0.9rem;
+  border: none;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.1);
+}
+
+@media (max-width: 768px) {
+  .navbar {
+    margin-inline: 1rem;
+  }
+  .glass-card,
+  .card-modern {
+    padding: 2rem 1.5rem;
+  }
+}
