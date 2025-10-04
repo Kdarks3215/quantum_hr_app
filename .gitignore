@@ -1,0 +1,98 @@
+﻿# --- Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Virtual environments
+.env
+.env.*
+venv/
+venv*/
+.envrc
+pip-wheel-metadata/
+
+# Packaging / build
+build/
+dist/
+*.egg-info/
+.eggs/
+.wheels/
+
+# --- Node / Frontend ---
+node_modules/
+.pnpm-store/
+.yarn/
+.yarn-cache/
+.npm/
+.npmrc
+
+# Vite / React build outputs
+frontend/dist/
+dist/
+*.bundle.js
+*.bundle.js.map
+*.min.js
+
+# Logs & coverage
+*.log
+logs/
+coverage/
+.coverage
+coverage.xml
+pytest-cache/
+.pytest_cache/
+
+# Databases & state
+*.sqlite
+*.sqlite3
+*.db
+instance/*.db
+instance/*.sqlite*
+
+# Editor / IDE metadata
+.vscode/
+.idea/
+*.iml
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+.DS_Store
+Thumbs.db
+
+# AWS / Secrets
+.aws/
+*.pem
+*.ppk
+.secret/
+secrets/
+.env.aws
+.env.local
+aws_credentials
+
+# CI/CD temp artifacts
+.tmp/
+.temp/
+.cache/
+.mypy_cache/
+.pyre/
+.pytype/
+
+# Test artifacts
+htmlcov/
+.tox/
+nosetests.xml
+junit*.xml
+
+# Docker / Compose overrides
+*.pid
+*.pid.lock
+docker-data/
+
+# Misc backup files
+*~
+*.swp
+*.swo
+.BACKUP
+.RELEASE_BACKUP
