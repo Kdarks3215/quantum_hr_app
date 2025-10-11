@@ -1,65 +1,63 @@
-ï»¿{% extends "base.html" %}
-{% block title %}Dashboard â€¢ Quantum HR{% endblock %}
+{% extends \"base.html\" %}
+{% block title %}Dashboard • Quantum HR{% endblock %}
 {% block content %}
-<section class="glass-card mt-4">
-  <div class="d-flex flex-column flex-md-row justify-content-between align-items-start gap-3 mb-4">
+<section class=\"glass-card mt-4\">
+  <div class=\"d-flex flex-column flex-md-row justify-content-between align-items-start gap-3 mb-4\">
     <div>
-      <h1 class="page-title">Workforce Snapshot</h1>
-      <p class="text-muted mb-0">Track your team and keep leave approvals moving.</p>
+      <h1 class=\"page-title\">Workforce Snapshot</h1>
+      <p class=\"text-muted mb-0\">Track your team and keep leave approvals moving.</p>
     </div>
-    <a href="{{ url_for('main.manage') }}" class="btn btn-primary align-self-md-center">Manage Team</a>
+    <a href=\"{{ url_for('main.manage') }}\" class=\"btn btn-primary align-self-md-center\">Manage Team</a>
   </div>
 
-  <div class="hero-stats">
-    <div class="stat-card">
-      <div class="stat-title">Total Employees</div>
-      <div class="stat-value">{{ employees|length }}</div>
+  <div class=\"hero-stats\">
+    <div class=\"stat-card\">
+      <div class=\"stat-title\">Total Employees</div>
+      <div class=\"stat-value\">{{ employees|length }}</div>
     </div>
-    <div class="stat-card">
-      <div class="stat-title">Pending Leave</div>
-      <div class="stat-value">{{ pending_count }}</div>
+    <div class=\"stat-card\">
+      <div class=\"stat-title\">Pending Leave</div>
+      <div class=\"stat-value\">{{ pending_count }}</div>
     </div>
-    <div class="stat-card">
-      <div class="stat-title">Administrators</div>
-      <div class="stat-value">{{ admin_count }}</div>
+    <div class=\"stat-card\">
+      <div class=\"stat-title\">Administrators</div>
+      <div class=\"stat-value\">{{ admin_count }}</div>
     </div>
   </div>
 </section>
 
-<section class="mt-4">
-  <div class="table-responsive">
-    <table class="table align-middle mb-0">
+<section class=\"mt-4\">
+  <div class=\"table-responsive\">
+    <table class=\"table align-middle mb-0\">
       <thead>
         <tr>
-          <th scope="col">Name</th>
-          <th scope="col">Role</th>
-          <th scope="col">Start Date</th>
-          <th scope="col">Leave Days</th>
-          <th scope="col">Salary (GHS)</th>
-          <th scope="col" class="text-end">Actions</th>
+          <th scope=\"col\">Name</th>
+          <th scope=\"col\">Role</th>
+          <th scope=\"col\">Start Date</th>
+          <th scope=\"col\">Leave Days</th>
+          <th scope=\"col\">Salary (GHS)</th>
+          <th scope=\"col\" class=\"text-end\">Actions</th>
         </tr>
       </thead>
       <tbody>
         {% for employee in employees %}
         <tr>
           <td>
-            <div class="fw-semibold">{{ employee.name }}</div>
-            <div class="text-muted small">User: {{ employee.user.username if employee.user else 'â€”' }}</div>
+            <div class=\"fw-semibold\">{{ employee.name }}</div>
+            <div class=\"text-muted small\">User: {{ employee.user.username if employee.user else '—' }}</div>
           </td>
-          <td><span class="badge-role">{{ employee.role }}</span></td>
-          <td>{{ employee.start_date.strftime('%b %d, %Y') if employee.start_date else 'â€”' }}</td>
+          <td><span class=\"badge-role\">{{ employee.role }}</span></td>
+          <td>{{ employee.start_date.strftime('%b %d, %Y') if employee.start_date else '—' }}</td>
           <td>{{ employee.leave_days }}</td>
-          <td class="fw-semibold">GHS {{ '%.2f'|format(employee.salary) }}</td>
-          <td class="text-end">
-            <a href="{{ url_for('main.edit_employee', employee_id=employee.id) }}" class="btn btn-sm btn-outline-secondary me-2">Edit</a>
-            <form action="{{ url_for('main.delete_employee', employee_id=employee.id) }}" method="post" class="d-inline">
-              <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Delete this employee?')">Delete</button>
-            </form>
+          <td class=\"fw-semibold\">GHS {{ '%.2f'|format(employee.salary) }}</td>
+          <td class=\"text-end\">
+            <a href=\"{{ url_for('main.edit_employee', employee_id=employee.id) }}\" class=\"btn btn-sm btn-outline-secondary me-2\">Edit</a>
+            <button type=\"button\" class=\"btn btn-sm btn-outline-danger\" data-bs-toggle=\"modal\" data-bs-target=\"#confirmDeleteModal\" data-delete-url=\"{{ url_for('main.delete_employee', employee_id=employee.id) }}\" data-employee-name=\"{{ employee.name }}\">Delete</button>
           </td>
         </tr>
         {% else %}
         <tr>
-          <td colspan="6" class="text-center text-muted py-5">No employees found. Use Manage Team to get started.</td>
+          <td colspan=\"6\" class=\"text-center text-muted py-5\">No employees found. Use Manage Team to get started.</td>
         </tr>
         {% endfor %}
       </tbody>
@@ -67,59 +65,104 @@
   </div>
 </section>
 
-<section class="mt-4 glass-card">
-  <div class="d-flex flex-column flex-md-row justify-content-between align-items-start gap-3 mb-3">
+<section class=\"mt-4 glass-card\">
+  <div class=\"d-flex flex-column flex-md-row justify-content-between align-items-start gap-3 mb-3\">
     <div>
-      <h2 class="h4 fw-semibold mb-1">Leave Requests</h2>
-      <p class="text-muted small mb-0">Review and approve pending leave submissions.</p>
+      <h2 class=\"h4 fw-semibold mb-1\">Leave Requests</h2>
+      <p class=\"text-muted small mb-0\">Review and take action on outstanding requests.</p>
     </div>
   </div>
-  <div class="table-responsive">
-    <table class="table table-sm align-middle mb-0">
+  <div class=\"table-responsive\">
+    <table class=\"table table-sm align-middle mb-0\">
       <thead>
         <tr>
-          <th scope="col">Employee</th>
-          <th scope="col">Period</th>
-          <th scope="col">Reason</th>
-          <th scope="col">Status</th>
-          <th scope="col" class="text-end">Action</th>
+          <th scope=\"col\">Employee</th>
+          <th scope=\"col\">Period</th>
+          <th scope=\"col\">Reason</th>
+          <th scope=\"col\">Status</th>
+          <th scope=\"col\">Manager Note</th>
+          <th scope=\"col\" class=\"text-end\">Action</th>
         </tr>
       </thead>
       <tbody>
         {% for request in leave_requests %}
         <tr>
           <td>
-            <div class="fw-semibold">{{ request.employee.name if request.employee else 'â€”' }}</div>
-            <div class="text-muted small">{{ request.employee.user.username if request.employee and request.employee.user else '' }}</div>
+            <div class=\"fw-semibold\">{{ request.employee.name if request.employee else '—' }}</div>
+            <div class=\"text-muted small\">{{ request.employee.user.username if request.employee and request.employee.user else '' }}</div>
           </td>
-          <td>{{ request.start_date.strftime('%b %d, %Y') }} â€“ {{ request.end_date.strftime('%b %d, %Y') }}</td>
-          <td class="text-muted small">{{ request.reason or 'â€”' }}</td>
+          <td>{{ request.start_date.strftime('%b %d, %Y') }} – {{ request.end_date.strftime('%b %d, %Y') }}</td>
+          <td class=\"text-muted small\">{{ request.reason or '—' }}</td>
           <td>
             {% if request.status == 'approved' %}
-            <span class="badge bg-success rounded-pill">Approved</span>
+            <span class=\"badge bg-success rounded-pill\">Approved</span>
             {% elif request.status == 'rejected' %}
-            <span class="badge bg-danger rounded-pill">Rejected</span>
+            <span class=\"badge bg-danger rounded-pill\">Rejected</span>
             {% else %}
-            <span class="badge bg-warning text-dark rounded-pill">Pending</span>
+            <span class=\"badge bg-warning text-dark rounded-pill\">Pending</span>
             {% endif %}
           </td>
-          <td class="text-end">
+          <td class=\"text-muted small\">{{ request.decision_comment or '—' }}</td>
+          <td class=\"text-end\">
             {% if request.status == 'pending' %}
-            <form method="post" action="{{ url_for('main.approve_leave_request', request_id=request.id) }}">
-              <button type="submit" class="btn btn-sm btn-primary">Approve</button>
-            </form>
+            <div class=\"d-flex flex-column gap-2 align-items-end\">
+              <form method=\"post\" action=\"{{ url_for('main.approve_leave_request', request_id=request.id) }}\" class=\"d-flex gap-2\">
+                <input type=\"text\" class=\"form-control form-control-sm\" name=\"comment\" placeholder=\"Optional note\">
+                <button type=\"submit\" class=\"btn btn-sm btn-primary\">Approve</button>
+              </form>
+              <form method=\"post\" action=\"{{ url_for('main.reject_leave_request', request_id=request.id) }}\" class=\"d-flex gap-2\">
+                <input type=\"text\" class=\"form-control form-control-sm\" name=\"comment\" placeholder=\"Reason\" required>
+                <button type=\"submit\" class=\"btn btn-sm btn-outline-danger\">Reject</button>
+              </form>
+            </div>
             {% else %}
-            <span class="text-muted small">â€”</span>
+            <span class=\"text-muted small\">—</span>
             {% endif %}
           </td>
         </tr>
         {% else %}
         <tr>
-          <td colspan="5" class="text-center text-muted py-4">No leave requests yet.</td>
+          <td colspan=\"6\" class=\"text-center text-muted py-4\">No leave requests yet.</td>
         </tr>
-        {% endfor %}
+        {% endif %}
       </tbody>
     </table>
   </div>
 </section>
+
+<div class=\"modal fade\" id=\"confirmDeleteModal\" tabindex=\"-1\" aria-labelledby=\"confirmDeleteLabel\" aria-hidden=\"true\">
+  <div class=\"modal-dialog modal-dialog-centered\">
+    <div class=\"modal-content\">
+      <div class=\"modal-header\">
+        <h5 class=\"modal-title\" id=\"confirmDeleteLabel\">Delete Employee</h5>
+        <button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"modal\" aria-label=\"Close\"></button>
+      </div>
+      <div class=\"modal-body\">
+        <p class=\"mb-0\">Are you sure you want to delete <span id=\"employeeName\" class=\"fw-semibold\"></span>? This action cannot be undone.</p>
+      </div>
+      <div class=\"modal-footer\">
+        <button type=\"button\" class=\"btn btn-outline-secondary\" data-bs-dismiss=\"modal\">Cancel</button>
+        <form id=\"deleteEmployeeForm\" method=\"post\">
+          <button type=\"submit\" class=\"btn btn-danger\">Delete</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const deleteModal = document.getElementById('confirmDeleteModal');
+  if (deleteModal) {
+    deleteModal.addEventListener('show.bs.modal', event => {
+      const button = event.relatedTarget;
+      const url = button.getAttribute('data-delete-url');
+      const name = button.getAttribute('data-employee-name');
+      const form = deleteModal.querySelector('#deleteEmployeeForm');
+      const nameTarget = deleteModal.querySelector('#employeeName');
+      form.setAttribute('action', url);
+      nameTarget.textContent = name;
+    });
+  }
+</script>
 {% endblock %}
+

@@ -5,86 +5,78 @@
   <div class="d-flex flex-column flex-md-row justify-content-between align-items-start gap-3 mb-4">
     <div>
       <h1 class="page-title">Team Management</h1>
-      <p class="text-muted mb-0">Provision accounts and build employee records from a single workspace.</p>
+      <p class="text-muted mb-0">Capture the full employee profile and their Quantum HR access in a single streamlined form.</p>
     </div>
     <a href="{{ url_for('main.dashboard') }}" class="btn btn-outline-secondary align-self-md-center">Back to Dashboard</a>
   </div>
 
-  <div class="row g-4">
-    <div class="col-lg-6">
-      <div class="card-modern p-4 h-100">
-        <h2 class="h5 fw-semibold mb-3">Create User</h2>
-        <p class="text-muted small mb-4">Use this form to add a new Quantum HR account. Share credentials securely with the teammate.</p>
-        <form method="post" novalidate>
-          <input type="hidden" name="form_type" value="create_user">
-          <div class="mb-3">
+  <div class="card-modern p-4">
+    <form method="post" novalidate>
+      <div class="step-header mb-4">
+        <div class="step-item active">
+          <span class="step-circle">1</span>
+          <span class="step-label">Employee Profile</span>
+        </div>
+        <div class="step-divider"></div>
+        <div class="step-item active">
+          <span class="step-circle">2</span>
+          <span class="step-label">Account Credentials</span>
+        </div>
+      </div>
+
+      <div class="form-section mb-5">
+        <h2 class="section-title">Employee Details</h2>
+        <p class="section-hint">Tell us about the teammate joining Quantum HR. These details power reporting and workflow assignments.</p>
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label for="employee_name" class="form-label">Full Name</label>
+            <input type="text" class="form-control" id="employee_name" name="name" placeholder="e.g. Ama Osei" required>
+          </div>
+          <div class="col-md-6">
+            <label for="employee_role" class="form-label">Job Title</label>
+            <input type="text" class="form-control" id="employee_role" name="employee_role" placeholder="e.g. Salon Lead" required>
+          </div>
+          <div class="col-md-6">
+            <label for="salary" class="form-label">Salary (GHS)</label>
+            <input type="number" step="0.01" min="0" class="form-control" id="salary" name="salary" placeholder="e.g. 6500" required>
+          </div>
+          <div class="col-md-6">
+            <label for="start_date" class="form-label">Start Date</label>
+            <input type="date" class="form-control" id="start_date" name="start_date" required>
+          </div>
+          <div class="col-md-4">
+            <label for="leave_days" class="form-label">Leave Days</label>
+            <input type="number" min="0" class="form-control" id="leave_days" name="leave_days" value="0" required>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <h2 class="section-title">User Credentials</h2>
+        <p class="section-hint">These credentials allow the employee to sign in, submit leave requests, and access their dashboard.</p>
+        <div class="row g-3">
+          <div class="col-md-6">
             <label for="username" class="form-label">Username</label>
             <input type="text" class="form-control" id="username" name="username" placeholder="unique.username" required>
           </div>
-          <div class="mb-3">
+          <div class="col-md-6">
             <label for="password" class="form-label">Temporary Password</label>
-            <input type="password" class="form-control" id="password" name="password" placeholder="Set a starter password" required>
+            <input type="password" class="form-control" id="password" name="password" placeholder="Set an initial password" required>
           </div>
-          <div class="mb-3">
+          <div class="col-md-4">
             <label for="role" class="form-label">Role</label>
             <select class="form-select" id="role" name="role">
               <option value="user" selected>User</option>
               <option value="admin">Administrator</option>
             </select>
           </div>
-          <button type="submit" class="btn btn-primary w-100">Create User</button>
-        </form>
-      </div>
-    </div>
-    <div class="col-lg-6">
-      <div class="card-modern p-4 h-100">
-        <h2 class="h5 fw-semibold mb-3">Create Employee Profile</h2>
-        <p class="text-muted small mb-4">Associate an employee record with an existing user and set their compensation details.</p>
-        {% if available_users %}
-        <form method="post" novalidate>
-          <input type="hidden" name="form_type" value="create_employee">
-          <div class="mb-3">
-            <label for="user_id" class="form-label">User Account</label>
-            <select class="form-select" id="user_id" name="user_id" required>
-              <option value="" selected>Select user</option>
-              {% for user in available_users %}
-              <option value="{{ user.id }}">{{ user.username }}{% if user.role.lower() == 'admin' %} (Admin){% endif %}</option>
-              {% endfor %}
-            </select>
-          </div>
-          <div class="row g-3">
-            <div class="col-md-6">
-              <label for="name" class="form-label">Full Name</label>
-              <input type="text" class="form-control" id="name" name="name" placeholder="e.g. Ama Osei" required>
-            </div>
-            <div class="col-md-6">
-              <label for="employee_role" class="form-label">Job Title</label>
-              <input type="text" class="form-control" id="employee_role" name="employee_role" placeholder="e.g. Salon Lead" required>
-            </div>
-            <div class="col-md-6">
-              <label for="salary" class="form-label">Salary (GHS)</label>
-              <input type="number" step="0.01" min="0" class="form-control" id="salary" name="salary" placeholder="e.g. 6500" required>
-            </div>
-            <div class="col-md-6">
-              <label for="start_date" class="form-label">Start Date</label>
-              <input type="date" class="form-control" id="start_date" name="start_date" required>
-            </div>
-            <div class="col-md-6">
-              <label for="leave_days" class="form-label">Leave Days</label>
-              <input type="number" min="0" class="form-control" id="leave_days" name="leave_days" value="0" required>
-            </div>
-          </div>
-          <div class="d-flex justify-content-end mt-4">
-            <button type="submit" class="btn btn-success px-4">Create Profile</button>
-          </div>
-        </form>
-        {% else %}
-        <div class="alert alert-info mb-0" role="alert">
-          All users already have profiles. Create a new user first, then return here.
         </div>
-        {% endif %}
       </div>
-    </div>
+
+      <div class="d-flex justify-content-end mt-4">
+        <button type="submit" class="btn btn-primary px-4">Create Employee</button>
+      </div>
+    </form>
   </div>
 </section>
 

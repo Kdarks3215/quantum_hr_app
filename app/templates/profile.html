@@ -69,6 +69,7 @@
             <th scope="col">Period</th>
             <th scope="col">Reason</th>
             <th scope="col">Status</th>
+            <th scope="col">Manager Note</th>
             <th scope="col">Requested</th>
           </tr>
         </thead>
@@ -86,11 +87,12 @@
               <span class="badge bg-warning text-dark rounded-pill">Pending</span>
               {% endif %}
             </td>
+            <td class="text-muted small">{{ request.decision_comment or '—' }}</td>
             <td class="text-muted small">{{ request.requested_at.strftime('%b %d, %Y') }}</td>
           </tr>
           {% else %}
           <tr>
-            <td colspan="4" class="text-center text-muted py-3">No leave requests yet.</td>
+            <td colspan="5" class="text-center text-muted py-3">No leave requests yet.</td>
           </tr>
           {% endfor %}
         </tbody>

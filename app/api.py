@@ -1,4 +1,4 @@
-﻿from datetime import datetime
+from datetime import datetime
 from typing import Optional
 
 from flask import Blueprint, jsonify, request
@@ -19,7 +19,7 @@ def _get_requesting_user() -> Optional[User]:
         user_id = int(identity)
     except (TypeError, ValueError):
         return None
-    return User.query.get(user_id)
+    return db.session.get(User, user_id)
 
 
 def _is_admin(user: Optional[User]) -> bool:
@@ -58,7 +58,7 @@ def create_employee():
     if not user_id or not isinstance(user_id, int):
         return jsonify({"message": "user_id is required and must be an integer."}), 400
 
-    user = User.query.get(user_id)
+    user = db.session.get(User, user_id)
     if not user:
         return jsonify({"message": "Referenced user does not exist."}), 404
     if user.employee_profile:

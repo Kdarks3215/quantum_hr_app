@@ -1,4 +1,4 @@
-﻿from datetime import datetime
+﻿from datetime import datetime, timezone
 
 from flask_login import UserMixin
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -6,12 +6,16 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from . import db
 
 
+def current_utc_time():
+    return datetime.now(timezone.utc)
+
+
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
     password_hash = db.Column(db.String(255), nullable=False)
     role = db.Column(db.String(50), default="user", nullable=False)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=current_utc_time)
 
     def set_password(self, password: str) -> None:
         self.password_hash = generate_password_hash(password)
@@ -28,7 +32,7 @@ class Employee(db.Model):
     salary = db.Column(db.Float, nullable=False)
     start_date = db.Column(db.Date, nullable=True)
     leave_days = db.Column(db.Integer, default=0, nullable=False)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=current_utc_time)
 
     user = db.relationship("User", backref=db.backref("employee_profile", uselist=False))
     leave_requests = db.relationship(
@@ -56,8 +60,9 @@ class LeaveRequest(db.Model):
     end_date = db.Column(db.Date, nullable=False)
     reason = db.Column(db.Text, nullable=True)
     status = db.Column(db.String(20), default="pending", nullable=False)
-    requested_at = db.Column(db.DateTime, default=datetime.utcnow)
+    requested_at = db.Column(db.DateTime, default=current_utc_time)
     decided_at = db.Column(db.DateTime, nullable=True)
+    decision_comment = db.Column(db.Text, nullable=True)
 
     def as_dict(self) -> dict:
         return {
@@ -69,4 +74,5 @@ class LeaveRequest(db.Model):
             "status": self.status,
             "requested_at": self.requested_at.isoformat() if self.requested_at else None,
             "decided_at": self.decided_at.isoformat() if self.decided_at else None,
+            "decision_comment": self.decision_comment,
         }

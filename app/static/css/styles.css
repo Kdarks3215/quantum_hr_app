@@ -117,3 +117,61 @@ main.container {
     padding: 2rem 1.5rem;
   }
 }
+.step-header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 1rem;
+}
+
+.step-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #94a3b8;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+}
+
+.step-item.active {
+  color: #334155;
+}
+
+.step-circle {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(76, 95, 215, 0.15);
+  color: var(--brand-primary-dark);
+  font-weight: 700;
+}
+
+.step-divider {
+  flex: 1 1 auto;
+  height: 2px;
+  background: rgba(148, 163, 184, 0.5);
+}
+
+.form-section {
+  background: rgba(255, 255, 255, 0.92);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+}
+
+.section-title {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+.section-hint {
+  font-size: 0.85rem;
+  color: #64748b;
+  margin-bottom: 1rem;
+}

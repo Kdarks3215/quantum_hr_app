@@ -88,3 +88,9 @@ junit*.xml
 *.pid
 *.pid.lock
 docker-data/
+
+.gitignore
+.dockerignore
+# External build repo
+../employee-management-build/
+

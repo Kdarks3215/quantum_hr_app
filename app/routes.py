@@ -88,71 +88,32 @@ def manage():
         flash("Administrator privileges are required to access management tools.", "danger")
         return redirect(url_for("main.dashboard"))
 
-    form_type = request.form.get("form_type")
     if request.method == "POST":
-        if form_type == "create_user":
-            _handle_user_creation()
-        elif form_type == "create_employee":
-            _handle_employee_creation()
+        _handle_employee_with_user_creation()
         return redirect(url_for("main.manage"))
 
     users = User.query.order_by(User.username.asc()).all()
     employees = Employee.query.order_by(Employee.id.asc()).all()
-    available_users = User.query.filter(User.employee_profile == None).order_by(User.username.asc()).all()  # noqa: E711
-    return render_template(
-        "manage.html",
-        users=users,
-        employees=employees,
-        available_users=available_users,
-    )
+    return render_template("manage.html", users=users, employees=employees)
 
-
-def _handle_user_creation() -> None:
+def _handle_employee_with_user_creation() -> None:
     username = request.form.get("username", "").strip()
     password = request.form.get("password", "").strip()
     role = (request.form.get("role") or "user").strip() or "user"
-
-    if not username or not password:
-        flash("Username and password are required.", "danger")
-        return
-
-    if User.query.filter_by(username=username).first():
-        flash("A user with that username already exists.", "warning")
-        return
-
-    user = User(username=username, role=role)
-    user.set_password(password)
-    db.session.add(user)
-    db.session.commit()
-    flash(f"User '{username}' created successfully.", "success")
-
-
-def _handle_employee_creation() -> None:
-    user_id = request.form.get("user_id")
     name = request.form.get("name", "").strip()
-    role = request.form.get("employee_role", "").strip()
+    employee_role = request.form.get("employee_role", "").strip()
     salary = request.form.get("salary", "").strip()
     start_date_str = request.form.get("start_date", "").strip()
     leave_days_str = request.form.get("leave_days", "").strip()
 
     error = None
-    if not user_id:
-        error = "Please select a user to assign this employee profile."
-    else:
-        try:
-            user_id = int(user_id)
-        except ValueError:
-            error = "Invalid user selection."
 
-    user = None
-    if not error:
-        user = User.query.get(user_id)
-        if not user:
-            error = "Selected user could not be found."
-        elif user.employee_profile:
-            error = "This user already has an employee profile."
+    if not username or not password:
+        error = "Username and password are required."
+    elif User.query.filter_by(username=username).first():
+        error = "A user with that username already exists."
 
-    if not name or not role or not salary:
+    if not name or not employee_role or not salary:
         error = error or "All fields are required."
 
     start_date = None
@@ -182,17 +143,22 @@ def _handle_employee_creation() -> None:
         flash(error, "danger")
         return
 
+    user = User(username=username, role=role)
+    user.set_password(password)
+    db.session.add(user)
+    db.session.flush()
+
     employee = Employee(
         user=user,
         name=name,
-        role=role,
+        role=employee_role,
         salary=salary_value,
         start_date=start_date,
         leave_days=leave_days,
     )
     db.session.add(employee)
     db.session.commit()
-    flash("Employee profile created successfully.", "success")
+    flash(f"Employee '{name}' and user '{username}' created successfully.", "success")
 
 
 @main_bp.route("/employees/<int:employee_id>/edit", methods=["GET", "POST"])
@@ -275,11 +241,32 @@ def approve_leave_request(request_id: int):
         return redirect(url_for("main.dashboard"))
 
     leave_request = LeaveRequest.query.get_or_404(request_id)
-    if leave_request.status == "approved":
-        flash("This leave request has already been approved.", "info")
-    else:
-        leave_request.status = "approved"
-        leave_request.decided_at = datetime.utcnow()
-        db.session.commit()
-        flash("Leave request approved.", "success")
+    leave_request.status = "approved"
+    leave_request.decided_at = datetime.utcnow()
+    leave_request.decision_comment = (request.form.get("comment") or "").strip() or None
+    db.session.commit()
+    flash("Leave request approved.", "success")
     return redirect(url_for("main.dashboard"))
+
+
+@main_bp.route("/leave-requests/<int:request_id>/reject", methods=["POST"])
+@login_required
+def reject_leave_request(request_id: int):
+    if not _current_user_is_admin():
+        flash("Administrator privileges are required to reject leave requests.", "danger")
+        return redirect(url_for("main.dashboard"))
+
+    comment = (request.form.get("comment") or "").strip()
+    if not comment:
+        flash("Please include a reason when rejecting a leave request.", "danger")
+        return redirect(url_for("main.dashboard"))
+
+    leave_request = LeaveRequest.query.get_or_404(request_id)
+    leave_request.status = "rejected"
+    leave_request.decided_at = datetime.utcnow()
+    leave_request.decision_comment = comment
+    db.session.commit()
+    flash("Leave request rejected.", "success")
+    return redirect(url_for("main.dashboard"))
+
+
